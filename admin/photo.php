@@ -12,13 +12,11 @@ check_status(ACCESS_ADMINISTRATOR);
 include_once(WIKIMEDIACOMMONS_PATH.'vendor/autoload.php');
 
 $_GET['image_id'] = $_GET['tab'];
-check_input_parameter('image_id', $_GET, false, PATTERN_ID);
-$admin_photo_base_url = get_root_url().'admin.php?page=photo-'.$_GET['image_id'];
-
-// check_input_parameter('tab', $_GET, false, PATTERN_ID);
-// $_GET['image_id'] = $imageId;
-
-$imageId = $_GET['tab'];
+check_input_parameter(
+  'image_id', $_GET, false, PATTERN_ID
+);
+$image_id = $_GET['tab'];
+$admin_photo_base_url = get_root_url().'admin.php?page=photo-'.$image_id;
 
 $page['active_menu'] = get_active_menu('photo');
 
@@ -29,75 +27,89 @@ $tabsheet->assign();
 
 // OAuth consumer config.
 if (!isset($conf[WIKIMEDIACOMMONS_ID])) {
-//  $conf[WIKIMEDIACOMMONS_ID] = safe_unserialize($conf[WIKIMEDIACOMMONS_ID]);
-//} else {
   if (is_autorize_status(ACCESS_WEBMASTER)) {
-    $page['warnings'] = l10n('Please set up the Wikimedia Commons OAuth consumer in the plugin settings.');
+    $page['warnings'] = l10n('Please set up the Wikimedia Commons
+      OAuth consumer in the plugin settings.');
   } else {
-    $page['errors'] = l10n('Please tell your site administrator to set up the Wikimedia Commons OAuth consumer in the plugin settings.');
+    $page['errors'] = l10n('Please tell your site administrator to set up
+      the Wikimedia Commons OAuth consumer in the plugin settings.');
   }
 }
 
-$userPrefs = userprefs_get_param(WIKIMEDIACOMMONS_ID);
-$loginUrl = false;
-if (!isset($userPrefs['access_key'])) {
-  $loginUrl = WIKIMEDIACOMMONS_ADMIN.'-oauth';
+$user_prefs = userprefs_get_param(WIKIMEDIACOMMONS_ID);
+$login_url = false;
+if (!isset($user_prefs['access_key'])) {
+  $login_url = WIKIMEDIACOMMONS_ADMIN.'-oauth';
 }
 
-$query = 'SELECT * FROM '.IMAGES_TABLE.' WHERE id = '.$imageId.';';
+$query = 'SELECT * FROM '.IMAGES_TABLE.' WHERE id = '.$image_id.';';
 $row = pwg_db_fetch_assoc(pwg_query($query));
 
 if (isset($_POST['commons_filename'])) {
   try {
-    $uploaded = uploadToCommons($row, $_POST['commons_filename'], $_POST['wikitext'], $_POST['caption']);
+    $uploaded = uploadToCommons(
+      $row,
+      $_POST['commons_filename'],
+      $_POST['wikitext'],
+      $_POST['caption']
+    );
   } catch (Exception $e) {
     $uploaded['warnings'] = [$e->getCode() => $e->getMessage()];
   }
   if (isset($uploaded['warnings'])) {
     foreach ($uploaded['warnings'] as $key => $val) {
-      $formattedVal = is_string($val) ? $val : var_export($val, true);
-      $page['warnings'][] = "Unable to upload to Commons. $key: $formattedVal";
+      $formatted_val = is_string($val) ? $val : var_export($val, true);
+      $page['warnings'][] = "Unable to upload to Commons. $key: $formatted_val";
     }
   } else {
-    $page['infos'][] = "Uploaded: <a href='{$uploaded['url']}'>{$uploaded['url']}</a>";
+    $page['infos'][] = l10n('Uploaded:')." <a href='{$uploaded['url']}'>{$uploaded['url']}</a>";
   }
 }
 
-$template->assign([
-  'ADMIN_PAGE_TITLE' => l10n('Edit photo').' <span class="image-id">#'.$imageId.'</span>',
-  'commons_url' => 'https://'.parse_url($conf[WIKIMEDIACOMMONS_ID]['endpoint'])['host'],
+$commons_url = parse_url($conf[WIKIMEDIACOMMONS_ID]['endpoint'])['host'];
+$commons_title = $row['name'].'.'.pathinfo($row['file'], PATHINFO_EXTENSION);
+$template->assign(array(
+  'ADMIN_PAGE_TITLE' => l10n('Edit photo').' <span class="image-id">#'.$image_id.'</span>',
+  'commons_url' => 'https://'.$commons_url,
   'image_url' => DerivativeImage::url(IMG_MEDIUM, $row),
-  'username' => $userPrefs['username'] ?? false,
-  'login_url' => $loginUrl,
-  'logout_url' => get_root_url().'admin.php?page=plugin-wikimediacommons-oauth&logout',
-  'commons_filename' => $row['name'].'.'.pathinfo($row['file'], PATHINFO_EXTENSION),
+  'username' => $user_prefs['username'] ?? false,
+  'login_url' => $login_url,
+  'logout_url' => WIKIMEDIACOMMONS_ADMIN.'-oauth&logout',
+  'commons_filename' => $commons_title,
   'caption' => $row['comment'],
   'wikitext' => getWikitext($row),
-]);
+));
 $template_handle = WIKIMEDIACOMMONS_ID.'admin_photo';
-$template->set_filename($template_handle, __DIR__ . '/photo.tpl');
+$template->set_filename($template_handle, __DIR__.'/photo.tpl');
 $template->assign_var_from_handle('ADMIN_CONTENT', $template_handle);
 
 function getWikitext($row): string
 {
+  $source = get_absolute_root_url().make_picture_url(
+    array('image_id' => $row['id'])
+  );
+  // phpcs:disable Squiz.Strings.ConcatenationSpacing.PaddingFound
   $information = "{{Information\n"
-    . "| description    = \n"
-    . "| date           = {{taken on|" . $row['date_creation'] . "|locationn=}}\n"
-    . "| source         = " . get_absolute_root_url().make_picture_url(['image_id' => $row['id']]) . "\n"
-    . "| author         = " . $row['author'] . "\n"
-    . "| permission     = \n"
-    . "}}\n";
+    ."| description = \n"
+    ."| date        = {{taken on|".$row['date_creation']."|locationn=}}\n"
+    ."| source      = $source\n"
+    ."| author      = ".$row['author']."\n"
+    ."| permission  = \n"
+    ."}}\n";
+  // phpcs:enable
   $location = '';
   if (isset($row['latitude'])) {
     $location = "{{location|".$row['latitude']."|".$row['longitude']."}}\n";
   }
+  // phpcs:disable Squiz.Strings.ConcatenationSpacing.PaddingFound
   return "== {{int:filedesc}} ==\n"
-    . $information
-    . $location
-    . "\n"
-    . "== {{int:license-header}} ==\n"
+    .$information
+    .$location
+    ."\n"
+    ."== {{int:license-header}} ==\n"
     // @todo Make the license customisable.
-    . "{{cc-by-sa-4.0}}";
+    ."{{cc-by-sa-4.0}}";
+  // phpcs:enable
 }
 
 /**
@@ -112,49 +124,54 @@ function uploadToCommons(array $row, string $title, string $text, string $captio
 {
   global $conf;
 
-  $fullPath = realpath($row['path']);
-  if (!$fullPath) {
-    throw new InvalidArgumentException('Unable to find image file at '.$row['path']);
+  $full_path = realpath($row['path']);
+  if (!$full_path) {
+    throw new InvalidArgumentException(
+      'Unable to find image file at '.$row['path']
+    );
   }
-  
-  $userPrefs = userprefs_get_param(WIKIMEDIACOMMONS_ID);
-  $authMethod = new OAuthOwnerConsumer(
+
+  $user_prefs = userprefs_get_param(WIKIMEDIACOMMONS_ID);
+  $auth_method = new OAuthOwnerConsumer(
     $conf[WIKIMEDIACOMMONS_ID]['key'],
     $conf[WIKIMEDIACOMMONS_ID]['secret'],
-    $userPrefs['access_key'],
-    $userPrefs['access_secret']
+    $user_prefs['access_key'],
+    $user_prefs['access_secret']
   );
-  $api = MediaWiki::newFromPage($conf[WIKIMEDIACOMMONS_ID]['endpoint'], $authMethod)->action();
+  $api = MediaWiki::newFromPage(
+    $conf[WIKIMEDIACOMMONS_ID]['endpoint'],
+    $auth_method
+  )->action();
   $uploader = new CommonsFileUploader($api);
-  $uploadResult = $uploader->uploadWithResult($title, $fullPath, $text);
-  if (isset($uploadResult['upload']['warnings'])) {
-    return $uploadResult['upload'];
+  $upload_result = $uploader->uploadWithResult($title, $full_path, $text);
+  if (isset($upload_result['upload']['warnings'])) {
+    return $upload_result['upload'];
   }
 
   // The resulting wiki page name, with 'File:' prefix.
-  $filename = $uploadResult['upload']['imageinfo']['canonicaltitle'];
-  $wikiUrl = $uploadResult['upload']['imageinfo']['descriptionurl'];
+  $filename = $upload_result['upload']['imageinfo']['canonicaltitle'];
+  $wiki_url = $upload_result['upload']['imageinfo']['descriptionurl'];
 
   // Get info.
   $info = $api->request(ActionRequest::simpleGet('query')
     ->setParam('titles', $filename));
   if (!isset($info['query']['pages'])) {
-    throw new Exception('Unable to get info about ' . $wikiUrl);
+    throw new Exception('Unable to get info about '.$wiki_url);
   }
-  $pageInfo = array_shift($info['query']['pages']);
+  $page_info = array_shift($info['query']['pages']);
 
   // Caption.
-  $mediaId = 'M' . $pageInfo['pageid'];
-  $params = [
+  $media_id = 'M'.$page_info['pageid'];
+  $params = array(
     'language' => 'en',
-    'id' => $mediaId,
+    'id' => $media_id,
     'value' => $caption,
     'token' => $api->getToken(),
-  ];
+  );
   $api->request(ActionRequest::simplePost('wbsetlabel', $params));
 
-  return [
+  return array(
     'filename' => $filename,
-    'url' => $wikiUrl,
-  ];
+    'url' => $wiki_url,
+  );
 }

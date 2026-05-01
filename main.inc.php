@@ -53,8 +53,8 @@ add_event_handler(
   function(array $sheets, ?string $id) {
     if ($id == 'photo')
     {
-      $logoUrl = WIKIMEDIACOMMONS_PATH.'/admin/commons.svg';
-      $logo = '<img src="'.$logoUrl.'" width="15" height="15" />';
+      $logo_url = WIKIMEDIACOMMONS_PATH.'/admin/commons.svg';
+      $logo = '<img src="'.$logo_url.'" width="15" height="15" />';
       $sheets[WIKIMEDIACOMMONS_ID] = array(
         'caption' => $logo.' '.l10n('Wikimedia Commons'),
         'url' => WIKIMEDIACOMMONS_ADMIN.'-'.$_GET['image_id'],

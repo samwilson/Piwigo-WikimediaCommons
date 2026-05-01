@@ -8,8 +8,8 @@ defined('PHPWG_ROOT_PATH') or exit(1);
 // Main navigation.
 $tab = $_GET['tab'] ?? 'settings';
 if (in_array($tab, array('settings', 'oauth'))) {
-  $adminPage = __DIR__.'/admin/'.$tab.'.php';
+  $admin_page = __DIR__.'/admin/'.$tab.'.php';
 } else {
-  $adminPage = __DIR__.'/admin/photo.php';
+  $admin_page = __DIR__.'/admin/photo.php';
 }
-require_once $adminPage;
+require_once $admin_page;

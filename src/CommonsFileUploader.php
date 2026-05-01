@@ -19,23 +19,30 @@ class CommonsFileUploader extends FileUploader
   }
 
   /**
-   * @param string $targetName
+   * @param string $target_name
    * @param string $location
    * @param string $text
    * @param string $comment
    * @return mixed
    */
-  public function uploadWithResult(string $targetName, string $location, string $text = '', string $comment = '')
+  public function uploadWithResult(
+    string $target_name,
+    string $location,
+    string $text = '',
+    string $comment = ''
+  )
   {
-    $params = [
-      'filename' => $targetName,
+    $params = array(
+      'filename' => $target_name,
       'token' => $this->api->getToken(),
       'text' => $text,
       'comment' => $comment,
       'filesize' => filesize($location),
       'file' => fopen($location, 'r'),
-    ];
-    $params = $this->uploadByChunks($params);
-    return $this->api->request(ActionRequest::simplePost('upload', $params));
+    );
+    return $this->api->request(ActionRequest::simplePost(
+      'upload',
+      $this->uploadByChunks($params)
+    ));
   }
 }
