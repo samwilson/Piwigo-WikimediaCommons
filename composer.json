@@ -1,14 +1,24 @@
 {
-    "name": "samwilson/piwigo2mediawiki",
-    "description": "A Piwigo plugin for exporting photos to MediaWiki wikis.",
+    "name": "samwilson/piwigo-wikimediacommons",
+    "description": "A Piwigo plugin for exporting photos to Wikimedia Commons.",
     "license": "GPL-3.0-or-later",
+    "config": {
+        "platform": {
+            "php": "8.2"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Piwigo\\Plugin\\WikimediaCommons\\": "src/"
+        }
+    },
     "require": {
-        "addwiki/mediawiki-api": "^0.7"
+        "addwiki/mediawiki-api": "^3"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.0",
-        "jakub-onderka/php-parallel-lint": "^0.9",
-        "mediawiki/minus-x": "^0.3"
+        "samwilson/piwigo-coding-standards": "^0.1",
+        "php-parallel-lint/php-parallel-lint": "^1",
+        "mediawiki/minus-x": "^2"
     },
     "scripts": {
         "test": [
