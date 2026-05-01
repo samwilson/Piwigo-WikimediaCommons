@@ -1,75 +1,65 @@
 <?php
 /*
-Plugin Name: Piwigo to MediaWiki
+Plugin Name: Wikimedia Commons
 Version: 0.1.0
-Description: A Piwigo plugin for exporting photos to MediaWiki wikis.
+Description: A Piwigo plugin for exporting photos to Wikimedia Commons.
 Plugin URI: auto
 Author: Sam Wilson
 Author URI: https://samwilson.id.au
+Has Settings: webmaster
 */
 
 // Make sure we're already in Piwigo.
 defined('PHPWG_ROOT_PATH') or exit(1);
 
 // Define plugin's paths etc.
-define('PIWIGO2MEDIAWIKI_ID', 'piwigo2mediawiki');
-define('PIWIGO2MEDIAWIKI_PATH', PHPWG_PLUGINS_PATH.PIWIGO2MEDIAWIKI_ID.'/');
-define('PIWIGO2MEDIAWIKI_PAGE', 'plugin-'.PIWIGO2MEDIAWIKI_ID);
+define('WIKIMEDIACOMMONS_ID', 'WikimediaCommons');
+define('WIKIMEDIACOMMONS_PATH', PHPWG_PLUGINS_PATH.WIKIMEDIACOMMONS_ID.'/');
+define('WIKIMEDIACOMMONS_PAGE', 'plugin-'.WIKIMEDIACOMMONS_ID);
 define(
-  'PIWIGO2MEDIAWIKI_ADMIN',
-  get_absolute_root_url().'admin.php?page=plugin-'.PIWIGO2MEDIAWIKI_ID
+  'WIKIMEDIACOMMONS_ADMIN',
+  get_absolute_root_url().'admin.php?page=plugin-'.WIKIMEDIACOMMONS_ID
 );
 define(
-  'PIWIGO2MEDIAWIKI_DIR',
-  realpath(PHPWG_PLUGINS_PATH.PIWIGO2MEDIAWIKI_ID).'/'
+  'WIKIMEDIACOMMONS_DIR',
+  realpath(PHPWG_PLUGINS_PATH.WIKIMEDIACOMMONS_ID).'/'
 );
 
 // Complain if our plugin directory is not named correctly.
-if (basename(dirname(__FILE__)) != PIWIGO2MEDIAWIKI_ID) {
+if (basename(__DIR__) !== WIKIMEDIACOMMONS_ID) {
   add_event_handler('init', function () {
     global $page;
     $page['errors'][] = l10n(
       'Plugin folder name is incorrect, please rename %s to %s',
-      basename(dirname(__FILE__)),
-      PIWIGO2MEDIAWIKI_ID
+      basename(__DIR__),
+      WIKIMEDIACOMMONS_ID
     );
   });
   return;
 }
 
 //Initialise the plugin.
-add_event_handler('init', function(){
+add_event_handler('init', function() {
   global $conf;
-  load_language('plugin.lang', PIWIGO2MEDIAWIKI_PATH);
-  if (isset($conf['piwigo2mediawiki'])) {
-    $conf['piwigo2mediawiki'] = safe_unserialize($conf['piwigo2mediawiki']);
+  load_language('plugin.lang', WIKIMEDIACOMMONS_PATH);
+  if (isset($conf[WIKIMEDIACOMMONS_ID])) {
+    $conf[WIKIMEDIACOMMONS_ID] = safe_unserialize($conf[WIKIMEDIACOMMONS_ID]);
   }
 });
 
-// Add event handlers.
-if (defined('IN_ADMIN')) {
-
-  // Add the admin menu item.
-  add_event_handler('get_admin_plugin_menu_links', function($menu) {
-    $menu[] = array(
-      'NAME' => l10n('Piwigo to MediaWiki'),
-      'URL' => PIWIGO2MEDIAWIKI_ADMIN,
-    );
-    return $menu;
-  });
-
-  // Add the send-to-MediaWiki global action.
-  add_event_handler('loc_end_element_set_global',
-    function () {
-      global $template, $conf;
-      $content = $template->assign( PIWIGO2MEDIAWIKI_DIR.'action.tpl' );
-      $template->append('element_set_global_plugins_actions',
-        array(
-          'ID' => PIWIGO2MEDIAWIKI_ID,
-          'NAME' => l10n('Copy to MediaWiki'), 'CONTENT' => $content,
-        )
+// Add a tab to the picture page.
+add_event_handler(
+  'tabsheet_before_select',
+  function(array $sheets, ?string $id) {
+    if ($id == 'photo')
+    {
+      $logoUrl = WIKIMEDIACOMMONS_PATH.'/admin/commons.svg';
+      $logo = '<img src="'.$logoUrl.'" width="15" height="15" />';
+      $sheets[WIKIMEDIACOMMONS_ID] = array(
+        'caption' => $logo.' '.l10n('Wikimedia Commons'),
+        'url' => WIKIMEDIACOMMONS_ADMIN.'-'.$_GET['image_id'],
       );
     }
-  );
-
-}
+    return $sheets;
+  }
+);

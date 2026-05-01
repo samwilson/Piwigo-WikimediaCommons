@@ -1,0 +1,30 @@
+name: CI
+
+on: push
+
+jobs:
+  build:
+
+    strategy:
+      matrix:
+        # All supported PHP versions https://www.php.net/supported-versions.php
+        php: [ '8.2', '8.3', '8.4', '8.5' ]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{matrix.php}}
+
+    - name: Install
+      run: |
+        composer install
+
+    - name: Test
+      run: |
+        composer test
