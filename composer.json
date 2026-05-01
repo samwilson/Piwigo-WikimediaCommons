@@ -1,5 +1,5 @@
 {
-    "name": "samwilson/wikimediacommons",
+    "name": "samwilson/piwigo-wikimediacommons",
     "description": "A Piwigo plugin for exporting photos to Wikimedia Commons.",
     "license": "GPL-3.0-or-later",
     "config": {
