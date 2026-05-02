@@ -20,7 +20,7 @@ $oauth_client_conf->setConsumer(new Consumer(
   $conf[WIKIMEDIACOMMONS_ID]['key'],
   $conf[WIKIMEDIACOMMONS_ID]['secret']
 ));
-$oauth_client_conf->setUserAgent(get_root_url());
+$oauth_client_conf->setUserAgent('piwigo/wikimedia-commons-plugin '.get_root_url());
 $client = new Client($oauth_client_conf);
 
 if (isset($_GET['logout'])) {

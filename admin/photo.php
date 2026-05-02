@@ -9,8 +9,6 @@ use Piwigo\Plugin\WikimediaCommons\CommonsFileUploader;
 
 check_status(ACCESS_ADMINISTRATOR);
 
-include_once(WIKIMEDIACOMMONS_PATH.'vendor/autoload.php');
-
 $_GET['image_id'] = $_GET['tab'];
 check_input_parameter(
   'image_id', $_GET, false, PATTERN_ID
