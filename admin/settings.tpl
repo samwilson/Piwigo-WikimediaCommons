@@ -5,14 +5,14 @@
   <p>
       {'To do this, first'|translate}
       <a href="https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration/propose/oauth1a">
-          {'go to Meta Wiki to set up a new OAuth consumer'|translate}
-      </a> with the following permissions:
+          {'go to Meta Wiki to set up a new OAuth 1.0a consumer'|translate}
+      </a> with the following grants:
   </p>
   <ul>
-  <li>{'Edit existing pages'|translate}</li>
-  <li>{'Create, edit, and move pages'|translate}</li>
-  <li>{'Upload new files'|translate}</li>
-  <li>{'Upload, replace, and move files'|translate}</li>
+    <li>{'Edit existing pages'|translate}</li>
+    <li>{'Create, edit, and move pages'|translate}</li>
+    <li>{'Upload new files'|translate}</li>
+    <li>{'Upload, replace, and move files'|translate}</li>
   </ul>
   <p>{'Set the callback URL to:'|translate} <code>{$callback_url}</code></p>
   <p>{'Meta Wiki will give you a <em>key</em> and a <em>secret</em>; add these to the form below.'|translate}</p>

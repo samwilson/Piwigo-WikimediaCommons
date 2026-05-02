@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__.'/vendor/autoload.php';
-include_once PHPWG_ROOT_PATH.'admin/include/tabsheet.class.php';
+require_once PHPWG_ROOT_PATH.'admin/include/tabsheet.class.php';
 
 defined('PHPWG_ROOT_PATH') or exit(1);
 
