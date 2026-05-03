@@ -37,8 +37,7 @@ if (!isset($conf[WIKIMEDIACOMMONS_ID])) {
 $user_prefs = userprefs_get_param(WIKIMEDIACOMMONS_ID);
 $login_url = false;
 if (!isset($user_prefs['access_key'])) {
-  //dd($tabsheet->get_selected());
-  $login_url = add_url_params(WIKIMEDIACOMMONS_ADMIN.'-oauth', array('returnto' => $tabsheet->get_selected()['url']));
+  $login_url = WIKIMEDIACOMMONS_ADMIN.'-oauth&returnto='.urlencode($tabsheet->get_selected()['url']);
 }
 
 $query = 'SELECT * FROM '.IMAGES_TABLE.' WHERE id = '.$image_id.';';
