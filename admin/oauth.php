@@ -20,21 +20,28 @@ $oauth_client_conf->setConsumer(new Consumer(
   $conf[WIKIMEDIACOMMONS_ID]['key'],
   $conf[WIKIMEDIACOMMONS_ID]['secret']
 ));
-$oauth_client_conf->setUserAgent('piwigo/wikimedia-commons-plugin '.get_root_url());
+$oauth_client_conf->setUserAgent('piwigo/wikimedia-commons-plugin '.get_absolute_root_url());
 $client = new Client($oauth_client_conf);
+if (isset($_GET['returnto'])) {
+  $client->setCallback(WIKIMEDIACOMMONS_ADMIN.'-oauth&returnto='.urlencode($_GET['returnto']));
+}
 
 if (isset($_GET['logout'])) {
   userprefs_update_param(WIKIMEDIACOMMONS_ID, null);
   $logged_out_msg = 'You have been logged out of Wikimedia Commons.';
   $_SESSION['page_infos'][] = l10n($logged_out_msg);
-  redirect(get_root_url().'admin.php');
+  redirect($_GET['returnto'] ?? get_root_url().'admin.php');
 }
 
 if (!isset($_GET['oauth_verifier'])) {
-  // Send them off to Commons to authorise Piwigo.
-  list( $auth_url, $request_token ) = $client->initiate();
-  $_SESSION['request_secret'] = $request_token->secret;
-  redirect($auth_url);
+  try {
+    // Send them off to Commons to authorise Piwigo.
+    list($auth_url, $request_token) = $client->initiate();
+    $_SESSION['request_secret'] = $request_token->secret;
+    redirect($auth_url);
+  } catch (Exception $e) {
+    $page['errors'][] = $e->getMessage();
+  }
 
 } else {
   // When they come back, reconstruct the token from the session,
@@ -48,5 +55,5 @@ if (!isset($_GET['oauth_verifier'])) {
     'access_secret' => $access_token->secret,
   ));
   $_SESSION['page_infos'][] = l10n('You are now logged in to Wikimedia Commons.');
-  redirect(get_root_url().'admin.php');
+  redirect($_GET['returnto'] ?? get_root_url().'admin.php');
 }

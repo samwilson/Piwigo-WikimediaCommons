@@ -28,7 +28,7 @@
     </p>
     <p>
       <label for="wikitext">{'Page wikitext:'|translate}</label>
-      <textarea name="wikitext" id="wikitext" rows="12" cols="24">{$wikitext}</textarea>
+      <textarea name="wikitext" id="wikitext" rows="20" cols="24">{$wikitext}</textarea>
     </p>
     <p>
       <input type="submit" value="{'Upload to Commons'|translate}" />

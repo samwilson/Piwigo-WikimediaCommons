@@ -14,7 +14,9 @@
     <li>{'Upload new files'|translate}</li>
     <li>{'Upload, replace, and move files'|translate}</li>
   </ul>
-  <p>{'Set the callback URL to:'|translate} <code>{$callback_url}</code></p>
+  <p>{'Set the callback URL to:'|translate}</p>
+  <blockquote><code>{$callback_url}</code></blockquote>
+  <p>{'Make sure that <em>"Allow consumer to specify a callback in requests"</em> is checked.'|translate}</p>
   <p>{'Meta Wiki will give you a <em>key</em> and a <em>secret</em>; add these to the form below.'|translate}</p>
   <p>{'Even though you register the OAuth consumer on Meta Wiki, you should use the Commons domain name in the <em>Endpoint URL</em> here, so that your users are directed there to authorise instead of to Meta Wiki.'|translate}</p>
 

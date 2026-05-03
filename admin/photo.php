@@ -37,7 +37,7 @@ if (!isset($conf[WIKIMEDIACOMMONS_ID])) {
 $user_prefs = userprefs_get_param(WIKIMEDIACOMMONS_ID);
 $login_url = false;
 if (!isset($user_prefs['access_key'])) {
-  $login_url = WIKIMEDIACOMMONS_ADMIN.'-oauth';
+  $login_url = WIKIMEDIACOMMONS_ADMIN.'-oauth&returnto='.urlencode($tabsheet->get_selected()['url']);
 }
 
 $query = 'SELECT * FROM '.IMAGES_TABLE.' WHERE id = '.$image_id.';';
@@ -72,7 +72,7 @@ $template->assign(array(
   'image_url' => DerivativeImage::url(IMG_MEDIUM, $row),
   'username' => $user_prefs['username'] ?? false,
   'login_url' => $login_url,
-  'logout_url' => WIKIMEDIACOMMONS_ADMIN.'-oauth&logout',
+  'logout_url' => WIKIMEDIACOMMONS_ADMIN.'-oauth&logout&returnto='.urlencode($tabsheet->get_selected()['url']),
   'commons_filename' => $commons_title,
   'caption' => $row['comment'],
   'wikitext' => getWikitext($row),

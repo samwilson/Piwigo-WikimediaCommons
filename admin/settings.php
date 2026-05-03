@@ -31,15 +31,11 @@ if (isset($_POST[WIKIMEDIACOMMONS_ID]['endpoint'])) {
 }
 
 // Prepare the template.
-$callback_url = add_url_params(
-  get_absolute_root_url().'admin.php',
-  array('page' => 'plugin-wikimediacommons-callback')
-);
 $template->assign(array(
   'admin_url' => WIKIMEDIACOMMONS_ADMIN,
   'wikimediacommons_page' => WIKIMEDIACOMMONS_PAGE,
   'wikimediacommons_conf' => $conf[WIKIMEDIACOMMONS_ID],
-  'callback_url' => $callback_url,
+  'callback_url' => WIKIMEDIACOMMONS_ADMIN.'-oauth',
 ));
 
 $template_handle = WIKIMEDIACOMMONS_ID.'-settings';
