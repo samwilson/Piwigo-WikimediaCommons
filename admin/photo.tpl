@@ -8,7 +8,7 @@
 {else}
   <p>
     {'You are logged in as %s.'|translate:$username}
-    <a href="{$logout_url}">{'Disconnect from Wikimedia Commons'|translate}</a>
+    <a href="{$logout_url}">{'Disconnect from Wikimedia Commons.'|translate}</a>
   </p>
 {/if}
 
