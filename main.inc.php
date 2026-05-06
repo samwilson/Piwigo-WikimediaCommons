@@ -30,7 +30,7 @@ if (basename(__DIR__) !== WIKIMEDIACOMMONS_ID) {
   add_event_handler('init', function () {
     global $page;
     $page['errors'][] = l10n(
-      'wikimediacommons-wrong-plugin-dir',
+      'Plugin folder name is incorrect, please rename %s to %s',
       basename(__DIR__),
       WIKIMEDIACOMMONS_ID
     );
