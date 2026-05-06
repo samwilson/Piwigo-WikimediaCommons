@@ -32,6 +32,7 @@ if (isset($_POST[WIKIMEDIACOMMONS_ID]['endpoint'])) {
 
 // Prepare the template.
 $template->assign(array(
+  'ADMIN_PAGE_TITLE' => l10n('Wikimedia Commons'),
   'admin_url' => WIKIMEDIACOMMONS_ADMIN,
   'wikimediacommons_page' => WIKIMEDIACOMMONS_PAGE,
   'wikimediacommons_conf' => $conf[WIKIMEDIACOMMONS_ID],

@@ -26,11 +26,9 @@ $tabsheet->assign();
 // OAuth consumer config.
 if (!isset($conf[WIKIMEDIACOMMONS_ID])) {
   if (is_autorize_status(ACCESS_WEBMASTER)) {
-    $page['warnings'] = l10n('Please set up the Wikimedia Commons
-      OAuth consumer in the plugin settings.');
+    $page['warnings'] = l10n('Please set up the Wikimedia Commons OAuth consumer in the plugin settings.');
   } else {
-    $page['errors'] = l10n('Please tell your site administrator to set up
-      the Wikimedia Commons OAuth consumer in the plugin settings.');
+    $page['errors'] = l10n('Please tell your site administrator to set up the Wikimedia Commons OAuth consumer in the plugin settings.');
   }
 }
 
