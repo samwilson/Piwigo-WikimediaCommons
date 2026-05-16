@@ -14,6 +14,7 @@ $lang['Endpoint URL:'] = 'Endpoint URL:';
 $lang['Key:'] = 'Key:';
 $lang['Secret:'] = 'Secret:';
 $lang['With this form you can upload a photo from here to <a href="%s">Wikimedia Commons</a>.'] = 'With this form you can upload a photo from here to <a href="%s">Wikimedia Commons</a>.';
+$lang['Connect to Wikimedia Commons'] = 'Connect to Wikimedia Commons';
 $lang['You are logged in as %s.'] = 'You are logged in as %s.';
 $lang['Disconnect from Wikimedia Commons.'] = 'Disconnect from Wikimedia Commons.';
 $lang['Filename on Commons:'] = 'Filename on Commons:';

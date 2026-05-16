@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Wikimedia Commons
-Version: 0.1.0
+Version: 0.2.0
 Description: A Piwigo plugin for exporting photos to Wikimedia Commons.
 Plugin URI: auto
 Author: Sam Wilson

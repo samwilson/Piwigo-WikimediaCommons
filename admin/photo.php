@@ -3,9 +3,9 @@
 defined('PHPWG_ROOT_PATH') or exit(1);
 
 use Addwiki\Mediawiki\Api\Client\Action\Request\ActionRequest;
-use Addwiki\Mediawiki\Api\Client\Auth\OAuthOwnerConsumer;
 use Addwiki\Mediawiki\Api\Client\MediaWiki;
 use Piwigo\Plugin\WikimediaCommons\CommonsFileUploader;
+use Piwigo\Plugin\WikimediaCommons\OAuthOwnerConsumer;
 
 check_status(ACCESS_ADMINISTRATOR);
 
@@ -87,7 +87,7 @@ function getWikitext($row): string
   // phpcs:disable Squiz.Strings.ConcatenationSpacing.PaddingFound
   $information = "{{Information\n"
     ."| description = \n"
-    ."| date        = {{taken on|".$row['date_creation']."|locationn=}}\n"
+    ."| date        = {{taken on|".$row['date_creation']."|location=}}\n"
     ."| source      = $source\n"
     ."| author      = ".$row['author']."\n"
     ."| permission  = \n"
@@ -134,6 +134,7 @@ function uploadToCommons(array $row, string $title, string $text, string $captio
     $user_prefs['access_key'],
     $user_prefs['access_secret']
   );
+  $auth_method->setIdentifierForUserAgent(wikimediacommons_useragent());
   $api = MediaWiki::newFromPage(
     $conf[WIKIMEDIACOMMONS_ID]['endpoint'],
     $auth_method
