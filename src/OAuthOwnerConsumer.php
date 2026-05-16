@@ -6,7 +6,8 @@ namespace Piwigo\Plugin\WikimediaCommons;
 use Addwiki\Mediawiki\Api\Client\Auth\OAuthOwnerConsumer as AddWikiOAuthOwnerConsumer;
 
 /**
- * This class is a temporary workaround in order to set the user agent.
+ * This class is a temporary workaround in order to set the user agent,
+ * until https://github.com/addwiki/addwiki/issues/229 is resolved.
  */
 class OAuthOwnerConsumer extends AddWikiOAuthOwnerConsumer
 {
