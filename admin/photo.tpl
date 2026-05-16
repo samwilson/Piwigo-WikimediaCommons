@@ -30,9 +30,15 @@
       <label for="wikitext">{'Page wikitext:'|translate}</label>
       <textarea name="wikitext" id="wikitext" rows="20" cols="24">{$wikitext}</textarea>
     </p>
-    <p>
-      <input type="submit" value="{'Upload to Commons'|translate}" />
-    </p>
+    <div class="savebar-footer">
+      <div class="savebar-footer-start">
+      </div>
+      <div class="savebar-footer-end">
+        <div class="savebar-footer-block">
+          <input type="submit" value="{'Upload to Commons'|translate}" />
+        </div>
+      </div>
+    </div>
   </form>
 </div>
 
